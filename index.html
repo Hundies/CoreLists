@@ -489,6 +489,7 @@ body{font-family:'Pretendard',-apple-system,sans-serif;background:var(--bg);colo
   font-size: 15px;
 }
 .editor-gutter.bullet::after{font-size:18px}
+.editor-gutter.square::after{font-size:11px}
 .editor-gutter.number::after{font-size:13px;font-weight:600}
 
 .editor-row.all-selected .editor-ta { background: rgba(37,99,235,0.15); }
@@ -675,6 +676,7 @@ body{font-family:'Pretendard',-apple-system,sans-serif;background:var(--bg);colo
             <polyline points="4.7,8.3 7.1,10.6 11.4,5.8" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>
           </svg>
         </button><div class="tb-sep"></div>
+        <button class="tbtn" data-style="square" id="tb-square"><svg width="13" height="13" viewBox="0 0 16 16" fill="currentColor"><rect x="2.5" y="2.5" width="11" height="11" rx="1.2"/></svg></button><div class="tb-sep"></div>
         <button class="tbtn" data-style="bullet" id="tb-bullet"><svg width="14" height="16" viewBox="0 0 16 18" fill="currentColor"><circle cx="8" cy="3" r="1.9"/><circle cx="8" cy="9" r="1.9"/><circle cx="8" cy="15" r="1.9"/></svg></button><div class="tb-sep"></div>
         <button class="tbtn" data-style="dash" id="tb-dash"><svg width="14" height="16" viewBox="0 0 16 18" fill="currentColor"><rect x="2" y="2" width="12" height="1.6" rx=".8"/><rect x="2" y="8" width="12" height="1.6" rx=".8"/><rect x="2" y="14" width="12" height="1.6" rx=".8"/></svg></button><div class="tb-sep"></div>
         <button class="tbtn" data-style="number" id="tb-number"><svg width="14" height="24" viewBox="0 0 16 28" fill="currentColor"><text x="8" y="6.5" font-size="6" font-weight="700" font-family="system-ui" text-anchor="middle">1.</text><text x="8" y="15.5" font-size="6" font-weight="700" font-family="system-ui" text-anchor="middle">2.</text><text x="8" y="24.5" font-size="6" font-weight="700" font-family="system-ui" text-anchor="middle">3.</text></svg></button><div class="tb-sep"></div>
@@ -756,7 +758,8 @@ function buildPreviewHtml(lines){
   while(i<lines.length){
     const l=lines[i];
     let pre='';
-    if(l.style==='bullet') pre='•';
+    if(l.style==='square') pre='■';
+    else if(l.style==='bullet') pre='•';
     else if(l.style==='dash') pre='–';
     else if(l.style==='number'){pre=`${ni+1}.`;ni++;}
     const rows=[{pre,html:l.html!==undefined?l.html:esc(l.text),indent:0,size:l.size,isTable:l.type==='table'}];
@@ -764,7 +767,8 @@ function buildPreviewHtml(lines){
     // 들여쓰기 자식 줄 묶기
     while(i<lines.length&&(lines[i].indent||0)>0){
       const c=lines[i]; let cp='';
-      if(c.style==='bullet') cp='•';
+      if(c.style==='square') cp='■';
+      else if(c.style==='bullet') cp='•';
       else if(c.style==='dash') cp='–';
       else if(c.style==='number'){cp=`${ni+1}.`;ni++;}
       rows.push({pre:cp,html:c.html!==undefined?c.html:esc(c.text),indent:c.indent||1,size:c.size});
@@ -989,8 +993,8 @@ function endDrag(card,wrap){
 }
 
 // ── EDITOR LINES ──────────────────────────────────────────────────────────────
-function gutterClass(s){if(s==='bullet')return'bullet';if(s==='number')return'number';return''}
-function gutterText(s,n){if(s==='bullet')return'•';if(s==='dash')return'–';if(s==='number')return`${n}.`;return''}
+function gutterClass(s){if(s==='square')return'square';if(s==='bullet')return'bullet';if(s==='number')return'number';return''}
+function gutterText(s,n){if(s==='square')return'■';if(s==='bullet')return'•';if(s==='dash')return'–';if(s==='number')return`${n}.`;return''}
 
 function makeRow(data){
   const row=document.createElement('div');row.className='editor-row';
